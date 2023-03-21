@@ -21,9 +21,15 @@
     THE SOFTWARE.
 */
 
+
 #include "LEDManager.h"
 #include "GlobalVars.h"
 #include "status/Status.h"
+#include "FastLED.h" //m5led
+
+const int M5_NUM_LEDS = 1;
+const int M5_LED_PIN = 27;
+static CRGB leds[M5_NUM_LEDS];
 
 namespace SlimeVR
 {
@@ -33,6 +39,13 @@ namespace SlimeVR
         pinMode(m_Pin, OUTPUT);
 #endif
 
+#if LED_ATOM
+        FastLED.addLeds<WS2812, M5_LED_PIN>(leds, M5_NUM_LEDS);
+        leds[0] = CRGB(255,0,0);
+        FastLED.setBrightness(50);
+        FastLED.show();
+        
+#endif
         // Do the initial pull of the state
         update();
     }
@@ -42,6 +55,11 @@ namespace SlimeVR
 #if ENABLE_LEDS
         digitalWrite(m_Pin, LED__ON);
 #endif
+
+#if LED_ATOM
+        FastLED.setBrightness(50);
+        FastLED.show();
+#endif
     }
 
     void LEDManager::off()
@@ -49,6 +67,12 @@ namespace SlimeVR
 #if ENABLE_LEDS
         digitalWrite(m_Pin, LED__OFF);
 #endif
+
+#if LED_ATOM
+        FastLED.setBrightness(50);
+        FastLED.clear();
+#endif
+
     }
 
     void LEDManager::blink(unsigned long time)
@@ -85,6 +109,8 @@ namespace SlimeVR
 
         if (statusManager.hasStatus(Status::LOW_BATTERY))
         {
+            leds[0] = CRGB(255,255,0);//m5led
+
             count = LOW_BATTERY_COUNT;
             switch (m_CurrentStage)
             {
@@ -102,6 +128,8 @@ namespace SlimeVR
         }
         else if (statusManager.hasStatus(Status::IMU_ERROR))
         {
+            leds[0] = CRGB(0,255,0);//m5led
+
             count = IMU_ERROR_COUNT;
             switch (m_CurrentStage)
             {
@@ -119,6 +147,7 @@ namespace SlimeVR
         }
         else if (statusManager.hasStatus(Status::WIFI_CONNECTING))
         {
+            leds[0] = CRGB(0,0,255);//m5led
             count = WIFI_CONNECTING_COUNT;
             switch (m_CurrentStage)
             {
@@ -136,6 +165,7 @@ namespace SlimeVR
         }
         else if (statusManager.hasStatus(Status::SERVER_CONNECTING))
         {
+            leds[0] = CRGB(255,0,255);//m5led
             count = SERVER_CONNECTING_COUNT;
             switch (m_CurrentStage)
             {
@@ -153,6 +183,8 @@ namespace SlimeVR
         }
         else
         {
+            leds[0] = CRGB(255,0,0);//m5led
+
 #if defined(LED_INTERVAL_STANDBY) && LED_INTERVAL_STANDBY > 0
             count = 1;
             switch (m_CurrentStage)

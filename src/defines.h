@@ -28,9 +28,9 @@
 // Set parameters of IMU and board used
 #define IMU IMU_BNO085
 #define SECOND_IMU IMU
-#define BOARD BOARD_SLIMEVR
-#define IMU_ROTATION DEG_270
-#define SECOND_IMU_ROTATION DEG_270
+#define BOARD BOARD_CUSTOM
+#define IMU_ROTATION DEG_180
+#define SECOND_IMU_ROTATION DEG_0
 
 // Battery monitoring options (comment to disable):
 //   BAT_EXTERNAL for ADC pin, 
@@ -128,6 +128,14 @@
 //  #define LED_PIN 2
 //  #define LED_INVERTED false
 #elif BOARD == BOARD_CUSTOM
+  #define PIN_IMU_SDA 25
+  #define PIN_IMU_SCL 21
+  #define PIN_BATTERY_LEVEL 33
+  #define PIN_IMU_INT 22
+  #define PIN_IMU_INT_2 19
+  #define LED_ATOM true
+//#define LED_PIN 27
+  #define LED_INVERTED false
   // Define pins by the examples above
 #elif BOARD == BOARD_WROOM32
   #define PIN_IMU_SDA 21
